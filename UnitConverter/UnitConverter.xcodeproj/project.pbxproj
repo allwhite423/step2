@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C27FAB302255D0B80092E9B0 /* Unit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27FAB2F2255D0B80092E9B0 /* Unit.swift */; };
 		C2C9DA4D2252F86C00226F08 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2C9DA4C2252F86C00226F08 /* main.swift */; };
 		C2C9DA6B2252FB6600226F08 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C9DA6A2252FB6600226F08 /* Foundation.framework */; };
 		C2C9DA6D2252FBA800226F08 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C9DA6C2252FBA800226F08 /* CoreFoundation.framework */; };
@@ -25,6 +26,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C27FAB2F2255D0B80092E9B0 /* Unit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unit.swift; sourceTree = "<group>"; };
 		C2C9DA492252F86C00226F08 /* UnitConverter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = UnitConverter; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2C9DA4C2252F86C00226F08 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C2C9DA6A2252FB6600226F08 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -65,6 +67,7 @@
 			isa = PBXGroup;
 			children = (
 				C2C9DA4C2252F86C00226F08 /* main.swift */,
+				C27FAB2F2255D0B80092E9B0 /* Unit.swift */,
 			);
 			path = UnitConverter;
 			sourceTree = "<group>";
@@ -136,6 +139,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C2C9DA4D2252F86C00226F08 /* main.swift in Sources */,
+				C27FAB302255D0B80092E9B0 /* Unit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
