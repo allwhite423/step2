@@ -8,162 +8,138 @@
 
 import Foundation
 
-let mCm = 100.0
-let inchCm = 2.54
-let yardCm = 91.44
-
-func cmToM(cm: Double) -> Double {
-    return Double(cm) / mCm
+struct LengthConversionBaseValue {
+    let cmBase = 1.0
+    let mBase = 100.0
+    let inchBase = 2.54
+    let yardBase = 91.44
 }
 
-func mToCm(m: Double) -> Double {
-    return m * mCm
-}
+let legthUnitDictionary = ["cm", "m", "inch", "yard"]
 
-func inchToCm(inch: Double) -> Double {
-    return inch * inchCm
-}
-
-func cmToInch(cm: Double) -> Double {
-    return cm / inchCm
-}
-
-func yardTocm(yard: Double) -> Double {
-    return yard * yardCm
-}
-
-func cmToYard(cm: Double) -> Double {
-    return cm / yardCm
-}
-
-func convert(userInput: String) -> String {
-    let dividedInput: [String] = seperateByGap(of: userInput)
+enum LengthUnit: String {
+    case cm = "cm"
+    case m = "m"
+    case inch = "inch"
+    case yard = "yard"
     
-    let from = dividedInput[0]
-    
-    guard let num = divideNumAndUnit(input: from).num else {
-        return "변환이 불가능합니다"
-    }
-    let unit = divideNumAndUnit(input: from).unit
-    
-    if dividedInput.count == 2 {
-        let to = dividedInput[1]
-        return switchUnit(num: num, from: unit, to: to)
-    } else {
-        return switchUnit(num: num, from: unit, to: nil)
-    }
-    
-    
-}
-
-func switchUnit(num: Double, from: String, to: String?) -> String {
-    
-    if to == nil {
-        if from == "cm" {
-            return "\(cmToM(cm: num))m"
-        } else if from == "m" {
-            return "\(mToCm(m: num))cm"
-        } else if from == "inch" {
-            return "\(inchToCm(inch: num))cm"
-        } else if from == "yard" {
-            return "\(cmToM(cm: yardTocm(yard: num)))m"
-        } else {
-            return "지원하지 않는 단위입니다"
-        }
-    } else {
-        switch (from, to) {
-        case ("cm", "m"):
-             return "\(cmToM(cm: num))m"
-        case("cm", "inch"):
-            return "\(cmToInch(cm: num))inch"
-        case("cm", "yard"):
-            return "\(cmToYard(cm: num))yard"
-        case("m", "cm"):
-             return "\(mToCm(m: num))cm"
-        case("m", "inch"):
-            return "\(cmToInch(cm: mToCm(m: num)))m"
-        case("m", "yard"):
-            return "\(cmToYard(cm: mToCm(m: num)))yard"
-        case("inch", "cm"):
-             return "\(inchToCm(inch: num))cm"
-        case("inch", "m"):
-             return "\(inchToCm(inch: cmToM(cm: num)))cm"
-        case ("inch", "yard"):
-            return "\(cmToYard(cm: inchToCm(inch: num)))yard"
-        case("yard", "cm"):
-            return "\(yardTocm(yard: num))cm"
-        case ("yard", "m"):
-            return "\(cmToM(cm: yardTocm(yard: num)))m"
-        case ("yard", "inch"):
-            return "\(cmToInch(cm: yardTocm(yard: num)))inch"
-        default:
-            return "지원하지 않는 단위입니다."
+    func convertDefaultValue(sourceNum: Double) -> String {
+        
+        switch self {
+        case .cm:
+            return "\(sourceNum / baseValue.mBase)m"
+        case .m:
+            return "\(sourceNum * baseValue.mBase)cm"
+        case .inch:
+            return "\(sourceNum * baseValue.inchBase)cm"
+        case .yard:
+            return "\(sourceNum * baseValue.yardBase / baseValue.mBase)m"
         }
     }
-    
-    
 }
+
+    let baseValue = LengthConversionBaseValue()
+
+
+
+func cmToLengthUnit(num: Double, unit: String) -> String {
+
+    guard let sourceUnit = LengthUnit(rawValue: unit) else {
+        return String()
+    }
+
+    switch sourceUnit {
+    case .cm:
+        return "\(num / baseValue.cmBase)" + unit
+    case .m:
+        return "\(num / baseValue.mBase)" + unit
+    case .inch:
+        return "\(num / baseValue.inchBase)" + unit
+    case .yard:
+        return "\(num / baseValue.yardBase)" + unit
+    }
+}
+
+func lengthUnitToCm(num: Double, unit: String) -> Double {
+    
+    guard let unit = LengthUnit(rawValue: unit) else {
+        return 0
+    }
+    
+    switch unit {
+    case .cm:
+        return num * baseValue.cmBase
+    case .m:
+        return num * baseValue.mBase
+    case .inch:
+        return num * baseValue.inchBase
+    case .yard:
+        return num * baseValue.yardBase
+    }
+}
+
 
 func seperateByGap(of input: String) -> [String] {
     return input.components(separatedBy: " ")
 }
 
-func divideNumAndUnit(input: String) -> (num: Double?, unit: String) {
+func seperateNumAndUnit(input: String) -> (sourceNum: Double, souceUnit: String, destinationUnit: String?) {
     let characterSet: String = "abcdefghijklmnopqrstuvwxyz"
-    var convertInputUnit = ""
-    var convertInputNum = ""
+    var inputNum = String()
+    var inputUnit = String()
+    let destUnit: String?
+    let inputArray = seperateByGap(of: input)
     
-    for char in input
-    {
-        if !characterSet.contains(char)
-        {
-            convertInputNum.append(char)
-        }
-        else
-        {
-            convertInputUnit.append(char)
+    if inputArray.count > 0 {
+        for char in inputArray[0] {
+            if !characterSet.contains(char) {
+                inputNum.append(char)
+            } else {
+                inputUnit.append(char)
+            }
         }
     }
     
-    if let convertedNum = Double(convertInputNum) {
-        return (convertedNum, convertInputUnit)
-    } else {
-        return (nil, convertInputUnit)
+    if let inputNum = Double(inputNum) {
+        if inputArray.count == 1 {
+            destUnit = nil
+            return (inputNum, inputUnit, destUnit)
+        } else if inputArray.count == 2 {
+            destUnit = inputArray[1]
+            return (inputNum, inputUnit, destUnit)
+        }
+    }
+    return (0,"", "")
+}
+
+
+func startConvert(str: String) {
+    
+    let tuple = seperateNumAndUnit(input: str)
+    let sourceNum  = tuple.sourceNum
+    let sourceUnit = tuple.souceUnit
+    if let destinationUnit = tuple.destinationUnit { //19cm inch
+        guard legthUnitDictionary.contains(destinationUnit) else {
+            print("지원하지 않는 단위입니다")
+            return
+        }
+        let convertedToCm = lengthUnitToCm(num: sourceNum, unit: sourceUnit)
+        print(cmToLengthUnit(num: convertedToCm, unit: destinationUnit))
+    } else { //19cm
+        guard let unit = LengthUnit.init(rawValue: sourceUnit) else {
+            print("지원하지 않는 단위입니다")
+            return
+        }
+        print(unit.convertDefaultValue(sourceNum: sourceNum))
+    }
+    
+}
+
+func runMainMenu() {
+    while let inputValue = readLine(), !inputValue.contains("q") {
+        startConvert(str: inputValue)
     }
 }
 
+runMainMenu()
 
-//print(convert(userInput: "120cm"))
-//print(convert(userInput: "1.2m"))
-//print(convert(userInput: "1"))
-//print(convert(userInput: "cm"))
-//print(convert(userInput: "1.."))
-//
-//
-//let test = "180cm inch"
-//var index = test.firstIndex(of: " ") ?? test.endIndex
-//print(test[..<index])
-//print(test[test.index(after: index)..<test.endIndex])
-//
-//print(test.components(separatedBy: " "))
-//
-//print(convert(userInput: test))
-//print(convert(userInput: "2.54yard"))
-//print(convert(userInput: "2.54yard cm"))
-
-//guard let inputValue = readLine() else {
-//    fatalError()
-//}
-//var input = ""
-//repeat {
-//    if let inputValue = readLine(), !inputValue.contains("q") {
-//        print(convert(userInput: inputValue))
-//    }
-//    input = inputValue
-//} while !input.contains("q")
-
-while let inputValue = readLine(), !inputValue.contains("q") {
-    print(convert(userInput: inputValue))
-}
-
-//print(inputValue)quit
