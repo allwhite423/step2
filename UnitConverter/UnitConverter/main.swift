@@ -60,13 +60,13 @@ func cmToLengthUnit(num: Double, unit: String) -> String {
     }
 }
 
-func lengthUnitToCm(num: Double, destinationUnit: String) -> Double {
+func lengthUnitToCm(num: Double, unit: String) -> Double {
     
-    guard let destinationUnit = LengthUnit(rawValue: destinationUnit) else {
+    guard let unit = LengthUnit(rawValue: unit) else {
         return 0
     }
     
-    switch destinationUnit {
+    switch unit {
     case .cm:
         return num * baseValue.cmBase
     case .m:
@@ -123,7 +123,7 @@ func startConvert(str: String) {
             print("지원하지 않는 단위입니다")
             return
         }
-        let convertedToCm = lengthUnitToCm(num: sourceNum, destinationUnit: sourceUnit)
+        let convertedToCm = lengthUnitToCm(num: sourceNum, unit: sourceUnit)
         print(cmToLengthUnit(num: convertedToCm, unit: destinationUnit))
     } else { //19cm
         guard let unit = LengthUnit.init(rawValue: sourceUnit) else {
